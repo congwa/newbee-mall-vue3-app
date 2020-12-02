@@ -1,5 +1,5 @@
 模板
-
+init
 ## 感谢
 
 - [Vue](https://github.com/vuejs/vue)
