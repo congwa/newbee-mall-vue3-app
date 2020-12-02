@@ -111,7 +111,7 @@ router.beforeEach((to, from, next) => {
       if(process.env.NODE_ENV == 'development') {
         store.commit('setOpenId', 'o-b5Hwa78WpJu_9jseYmDhtZeZu0');
       } else {
-        let queryObj = to.$route.query;
+        let queryObj = to.query;
         console.log('路由参数', queryObj);
         store.commit('setOpenId', queryObj.openid);
       }
