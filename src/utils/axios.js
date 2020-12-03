@@ -1,7 +1,8 @@
 
 import axios from 'axios'
 import { Toast } from 'vant'
-import { sign as signFunc } from '../common/js/utils.js';
+import store from '@/store';
+import router from '@/router';
 
 axios.defaults.baseURL = process.env.NODE_ENV == 'development' ? '/' : 'http://ls.im30.net/'
 // axios.defaults.withCredentials = true // 允许携带token ,这个是解决跨域产生的相关问题
@@ -10,16 +11,15 @@ axios.defaults.baseURL = process.env.NODE_ENV == 'development' ? '/' : 'http://l
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 axios.interceptors.request.use((config) => {
-  let sign = signFunc();
   if(config.method ==' post'){
     config.data = {
         ...config.data,
-        ...sign
+        sign: store.state.sign
         }
   }else if(config.method=='get'){
       config.params = {
           ...config.params,
-          ...sign
+          sign: store.state.sign
       }
   }
   return config;
@@ -36,7 +36,7 @@ axios.interceptors.response.use(res => {
   }
   if (res.data.code != 1) {
     if (res.data.msg) Toast.fail(res.data.msg);
-    // TODO 跳转错误页面
+    router.push('./error');
     return Promise.reject(res.data);
   }
   return res.data.data;

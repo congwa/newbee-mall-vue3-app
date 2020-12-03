@@ -17,8 +17,11 @@ export default {
     }
     state.roleId = roleId;
   },
-  
+
   gameName(state, gameName) {
     state.gameName = gameName;
+  },
+  sign(state, sign) {
+    state.sign = sign;
   }
 }

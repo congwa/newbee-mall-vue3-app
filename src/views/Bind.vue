@@ -1,7 +1,7 @@
 <!--
  * @Description: 绑定账号页
  * @Date: 2020-12-01 16:13:24
- * @LastEditTime: 2020-12-02 12:06:19
+ * @LastEditTime: 2020-12-03 15:23:43
  * @FilePath: /giftBag/src/views/Bind.vue
 -->
 
@@ -46,11 +46,12 @@ export default {
 
     // 确认按钮
     const confirm = async () => {
-      console.log('bind',state.roleId);
+      console.log('bind',state);
       try {
         const data = await bind({
         type: 'bind',
-          gameid: state.roleId
+          gameid: state.roleId,
+          openid: store.state.openid
         });
         console.log('bind', data);
         store.commit('bindStatus', BindStatus.NoConfirm);
