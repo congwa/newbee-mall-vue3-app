@@ -1,7 +1,7 @@
 <!--
  * @Description: 未进入游戏绑定
  * @Date: 2020-12-01 19:11:52
- * @LastEditTime: 2020-12-02 15:36:47
+ * @LastEditTime: 2020-12-03 16:35:08
  * @FilePath: /giftBag/src/views/BindNotConfirm.vue
 -->
 
@@ -12,7 +12,7 @@
                 <i class="weui-icon-warn weui-icon_msg-primary"></i>
             </div>
             <div class="tips-center">等待游戏验证</div>
-            <div class="tips-desc">账号ID：“{{roleId}}”，请进入游戏确认</div>
+            <div class="tips-desc">角色所在服：“{{roleId}}”，角色名：“${{gameName}}”，请进入游戏确认</div>
             <div>
                 <a @click="enter" href="javascript:" class="weui-btn weui-btn_primary">进入游戏</a>
                 <a v-if="!loading" href="javascript:" class="weui-btn weui-btn_disabled weui-btn_default">解除绑定</a>
@@ -36,7 +36,8 @@ export default {
   setup() {
     const state = reactive({
       roleId: '', // 游戏角色id
-      loading: false
+      loading: false,
+      gameName: null
     })
     const store = useStore();
     const mapState = store.state;
@@ -46,6 +47,7 @@ export default {
 
     onMounted(async () => {
         state.roleId = mapState.roleId; 
+        state.gameName = mapState.gameName;
     })
 
     const enter = async () => {

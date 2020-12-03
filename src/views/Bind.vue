@@ -1,7 +1,7 @@
 <!--
  * @Description: 绑定账号页
  * @Date: 2020-12-01 16:13:24
- * @LastEditTime: 2020-12-03 15:23:43
+ * @LastEditTime: 2020-12-03 15:25:13
  * @FilePath: /giftBag/src/views/Bind.vue
 -->
 
@@ -51,7 +51,7 @@ export default {
         const data = await bind({
         type: 'bind',
           gameid: state.roleId,
-          openid: store.state.openid
+          openid: store.state.openId
         });
         console.log('bind', data);
         store.commit('bindStatus', BindStatus.NoConfirm);

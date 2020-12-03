@@ -78,6 +78,7 @@ const HandleBindStatus = {
          openid: openId,
          type: 'query'
         });
+        console.log(store);
         console.log('openID', openId);
         console.log('query', data);
         store.commit('bindStatus', data.status);
@@ -92,7 +93,7 @@ const HandleBindStatus = {
       if(to.path === '/bind') {
         next();
       } else {
-        next('/bind');
+        next({path: '/bind'});
       }
     }
   }, 
@@ -106,7 +107,7 @@ const HandleBindStatus = {
       if(to.path === '/bindNotConfirm' || to.path === '/waitGameCheck') {
         next();
       } else {
-        next('/waitGameCheck');
+        next({path: '/waitGameCheck'});
       }
     }
   }
@@ -128,18 +129,21 @@ const HandleMetaIndex = {
       console.log('sign',store.state.openId);
       console.log('query openid',to.query.openid );
       console.log('query sign', to.query.sign);
-      if(Boolean(!store.state.openId) && Boolean(!store.state.sign) && Boolean(to.query.openid) && Boolean(to.query.sign)) {
-        let queryObj = to.query;
-        store.commit('setOpenId', queryObj.openid);
-        store.commit('sign', queryObj.sign);
-        if(process.env.NODE_ENV == 'development') {
-          store.commit('setOpenId', 'o-b5Hwa78WpJu_9jseYmDhtZeZu0');
+      if (Boolean(to.query.openid) && Boolean(to.query.sign)) {
+        if(Boolean(!store.state.openId) && Boolean(!store.state.sign)) {
+          let queryObj = to.query;
+          store.commit('setOpenId', queryObj.openid);
+          store.commit('sign', queryObj.sign);
+          if(process.env.NODE_ENV == 'development') {
+            store.commit('setOpenId', 'o-b5Hwa78WpJu_9jseYmDhtZeZu0');
+          } 
         } 
       } else {
         Toast(`缺少openid或者sign`);
-        next('/error');
+        next({path: '/error'});
         return null;
       }
+      
       return true;
     } 
   },
@@ -155,6 +159,15 @@ router.beforeEach((to, from, next) => {
     console.log('路由to：',to);
     console.log('路由from', from);
     console.log('store', store);
+
+    // 拼合openid
+    if(!to.query.openid) {
+      if(store.state.openId) to.query.openid = store.state.openId;
+    }
+
+    if(!to.query.sign) {
+      if(store.state.sign) to.query.sign = store.state.sign;
+    }
     // 改变title
     if (to.meta.title) {
       document.title = to.meta.title;
@@ -164,14 +177,7 @@ router.beforeEach((to, from, next) => {
     if(!isNext) {
       return null;
     }
-    // 拼合openid
-    if(!to.query.openid) {
-      if(store.state.openId) to.query.openid = store.state.openId;
-    }
-
-    if(!to.query.sign) {
-      if(store.state.sign) to.query.sign = store.state.sign;
-    }
+   
 
     console.log('store.state.BindStatus', store.state.bindStatus);
 
