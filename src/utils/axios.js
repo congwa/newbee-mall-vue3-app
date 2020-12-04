@@ -30,7 +30,7 @@ axios.interceptors.response.use(res => {
     Toast.fail('服务端异常！')
     return Promise.reject(res)
   }
-  if (typeof res.data !== 'object') {
+  if (!res.data) {
     Toast.fail('服务端异常！')
     return Promise.reject(res)
   }

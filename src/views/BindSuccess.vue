@@ -1,7 +1,7 @@
 <!--
  * @Description: 绑定成功
  * @Date: 2020-12-01 19:10:58
- * @LastEditTime: 2020-12-02 12:23:33
+ * @LastEditTime: 2020-12-04 12:05:34
  * @FilePath: /giftBag/src/views/BindSuccess.vue
 -->
 
@@ -12,7 +12,7 @@
       <div>
           <i class="weui-icon-success weui-icon_msg"></i>
       </div>
-      <div class="tips-center">{{roleId}} 已经绑定成功</div>
+      <div class="tips-center">{{gameName}} 已经绑定成功</div>
       <div>
         <a v-if="!loading" @click="unbind" href="javascript:" class="weui-btn weui-btn_primary">解绑</a>
         <a v-else href="javascript:" class="weui-btn weui-btn_primary weui-btn_loading"><span class="weui-primary-loading weui-primary-loading_transparent"><i class="weui-primary-loading__dot"></i></span>解绑</a>
@@ -27,11 +27,13 @@ import { reactive, onMounted, toRefs } from 'vue'
 import { useStore } from 'vuex';
 import { bind } from '@/service/user';
 import { useRouter} from 'vue-router';
+import { BindStatus } from '@/common/js/status.js';
 export default {
   name: 'bindSuccess',
   setup() {
     const state = reactive({
       roleId: '', // 游戏角色id
+      gameName: '',
       loading: false
     })
     const store = useStore();
@@ -39,16 +41,18 @@ export default {
     const router = useRouter();
     onMounted(async () => {
         state.roleId = mapState.roleId; 
+        state.gameName = mapState.gameName;
     })
 
     const unbind = async () => {
-        this.loading = true;
+        state.loading = true;
         const data = await bind({
           type: 'unbind',
           openid: mapState.openId
         });
-        this.loading = false;
+        state.loading = false;
         if (data) {
+          store.commit('bindStatus',BindStatus.No);
           router.push('/bind');
         }
     }

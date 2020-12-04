@@ -1,7 +1,7 @@
 <!--
  * @Description: 未进入游戏绑定
  * @Date: 2020-12-01 19:11:52
- * @LastEditTime: 2020-12-03 16:35:08
+ * @LastEditTime: 2020-12-04 11:57:14
  * @FilePath: /giftBag/src/views/BindNotConfirm.vue
 -->
 
@@ -12,10 +12,10 @@
                 <i class="weui-icon-warn weui-icon_msg-primary"></i>
             </div>
             <div class="tips-center">等待游戏验证</div>
-            <div class="tips-desc">角色所在服：“{{roleId}}”，角色名：“${{gameName}}”，请进入游戏确认</div>
+            <div class="tips-desc">角色所在服：“{{roleId}}”，角色名：“{{gameName}}”，请进入游戏确认</div>
             <div>
                 <a @click="enter" href="javascript:" class="weui-btn weui-btn_primary">进入游戏</a>
-                <a v-if="!loading" href="javascript:" class="weui-btn weui-btn_disabled weui-btn_default">解除绑定</a>
+                <a v-if="!loading" @click="unbind" href="javascript:" class="weui-btn weui-btn_disabled weui-btn_default">解除绑定</a>
                 <a v-else href="javascript:" class="weui-btn weui-btn_default weui-btn_loading"><span class="weui-primary-loading"><i class="weui-primary-loading__dot"></i></span>解除绑定</a>
             </div>
         </div>
@@ -29,6 +29,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import {bind} from '@/service/user.js';
 import Winxin from '@/components/Weixin.vue';
+import { BindStatus } from '@/common/js/status.js';
 
 export default {
   name: 'bindNotConfirm',
@@ -55,13 +56,14 @@ export default {
     }
 
     const unbind = async () => {
-        this.loading = true;
+        state.loading = true;
         const data = await bind({
           type: 'unbind',
           openid: mapState.openId
         });
-        this.loading = false;
+        state.loading = false;
         if (data) {
+          store.commit('bindStatus',BindStatus.No);
           router.push('/bind');
         }
     }

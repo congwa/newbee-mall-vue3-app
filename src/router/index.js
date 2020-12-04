@@ -68,16 +68,46 @@ const router = createRouter({
   ]
 })
 
+const nextFunc = (to, next, path = null) => {
+  if(path) {
+    next({
+      path: path,
+      query: {
+        sign: store.state.sign,
+        openid: store.state.openId
+      }
+    });
+    return null;
+  }
+  if(!to.fullPath.includes('sign=') || !to.fullPath.includes('openid=')) {
+    next({
+      path: to.path,
+      query: {
+        sign: store.state.sign,
+        openid: store.state.openId
+      }
+    })
+  }
+  next();
+}
+
+
+
 const HandleBindStatus = {
   '': {
     async handle(to, from ,next) {
       
         let openId = store.state.openId;
-        
+        const t = Toast.loading({
+          message: '加载中...',
+          forbidClick: true,
+          duration: 0
+        });
         const data = await bind({
          openid: openId,
          type: 'query'
         });
+        t.clear();
         console.log(store);
         console.log('openID', openId);
         console.log('query', data);
@@ -91,23 +121,27 @@ const HandleBindStatus = {
   [BindStatus.No]: {
     async handle(to, from , next) {
       if(to.path === '/bind') {
-        next();
+        nextFunc(to,next);
       } else {
-        next({path: '/bind'});
+        nextFunc(to, next, './bind');
       }
     }
   }, 
   [BindStatus.Yes]: {
       async handle(to, from, next) {
-          next();
+        if(to.path === '/bindSuccess') {
+          nextFunc(to,next);
+        } else {
+          nextFunc(to, next, './bindSuccess');
+        }
       }
   },
   [BindStatus.NoConfirm]: {
     async handle(to, from, next) {
       if(to.path === '/bindNotConfirm' || to.path === '/waitGameCheck') {
-        next();
+        nextFunc(to, next);
       } else {
-        next({path: '/waitGameCheck'});
+        nextFunc(to, next, '/bindNotConfirm');
       }
     }
   }
@@ -130,7 +164,7 @@ const HandleMetaIndex = {
       console.log('query openid',to.query.openid );
       console.log('query sign', to.query.sign);
       if (Boolean(to.query.openid) && Boolean(to.query.sign)) {
-        if(Boolean(!store.state.openId) && Boolean(!store.state.sign)) {
+        if(Boolean(!store.state.openId) || Boolean(!store.state.sign)) {
           let queryObj = to.query;
           store.commit('setOpenId', queryObj.openid);
           store.commit('sign', queryObj.sign);
@@ -139,7 +173,7 @@ const HandleMetaIndex = {
           } 
         } 
       } else {
-        Toast(`缺少openid或者sign`);
+        Toast(`缺少必要参数`);
         next({path: '/error'});
         return null;
       }
