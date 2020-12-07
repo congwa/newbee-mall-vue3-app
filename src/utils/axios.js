@@ -2,7 +2,7 @@
 import axios from 'axios'
 import { Toast } from 'vant'
 import store from '@/store';
-import router from '@/router';
+// import router from '@/router';
 
 axios.defaults.baseURL = process.env.NODE_ENV == 'development' ? '/' : 'http://ls.im30.net/'
 // axios.defaults.withCredentials = true // 允许携带token ,这个是解决跨域产生的相关问题
@@ -27,16 +27,15 @@ axios.interceptors.request.use((config) => {
 
 axios.interceptors.response.use(res => {
   if(res.status !== 200) {
-    Toast.fail('服务端异常！')
+    Toast.fail('服务端异常！');
     return Promise.reject(res)
   }
   if (!res.data) {
-    Toast.fail('服务端异常！')
+    Toast.fail('服务端异常！');
     return Promise.reject(res)
   }
   if (res.data.code != 1) {
     if (res.data.msg) Toast.fail(res.data.msg);
-    router.push('./error');
     return Promise.reject(res.data);
   }
   return res.data.data;

@@ -1,7 +1,7 @@
 <!--
  * @Description: 绑定成功
  * @Date: 2020-12-01 19:10:58
- * @LastEditTime: 2020-12-04 12:05:34
+ * @LastEditTime: 2020-12-04 21:44:25
  * @FilePath: /giftBag/src/views/BindSuccess.vue
 -->
 
@@ -14,8 +14,7 @@
       </div>
       <div class="tips-center">{{gameName}} 已经绑定成功</div>
       <div>
-        <a v-if="!loading" @click="unbind" href="javascript:" class="weui-btn weui-btn_primary">解绑</a>
-        <a v-else href="javascript:" class="weui-btn weui-btn_primary weui-btn_loading"><span class="weui-primary-loading weui-primary-loading_transparent"><i class="weui-primary-loading__dot"></i></span>解绑</a>
+        <van-button type="danger" class="btn" @click="unbind" :disabled="loading">重新绑定</van-button>
       </div>
   </div>
 </div>
@@ -76,4 +75,10 @@ export default {
     margin: 5px;
 }
 
+.btn {
+  width: 185px;
+  margin-left: 55px;
+  margin-top: 20px;
+  
+}
 </style>
