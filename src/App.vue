@@ -1,11 +1,20 @@
 <template>
-  <div id="app">
-    <router-view class="router-view" v-slot="{ Component }">
-      <transition :name="transitionName">
-        <component :is="Component" />
-      </transition>
-    </router-view>
-  </div>
+<div id="app" style="display: flex;flex-direction: column-reverse;">
+  <router-view class="router-view" v-slot="{ Component }">
+    <transition :name="transitionName">
+      <component :is="Component" />
+    </transition>
+
+    <div class="weui-msg__extra-area">
+      <div class="weui-footer">
+        <p class="weui-footer__links">
+            <a href="javascript:void(0);" class="weui-footer__link">北京龙创悦动网络科技有限公司</a>
+        </p>
+        <p class="weui-footer__text">Copyright © 2015-2020</p>
+      </div>
+    </div>
+  </router-view>
+</div>
 </template>
 
 <script>
@@ -85,5 +94,9 @@ html, body {
 
 .van-badge--fixed {
   z-index: 1000;
+}
+
+.btn {
+  margin-top: 20px !important;
 }
 </style>

@@ -1,7 +1,7 @@
 <!--
  * @Description: 绑定还差一步
  * @Date: 2020-12-01 19:12:27
- * @LastEditTime: 2020-12-03 16:36:00
+ * @LastEditTime: 2020-12-07 19:28:59
  * @FilePath: /giftBag/src/views/WaitGameCheck.vue
 -->
 
@@ -18,6 +18,7 @@
             <div>
                 <a @click="enter" href="javascript:" class="weui-btn weui-btn_primary">进入游戏</a>
             </div>
+
         </div>
         <Winxin ref="weixinRef" />
     </div>
@@ -34,7 +35,7 @@ export default {
     const state = reactive({
       roleId: '', // 游戏角色id
       loading: false,
-      gameName: null
+      gameName: null,
     })
     const weixinRef = ref(null);
     const store = useStore();

@@ -1,7 +1,7 @@
 <!--
  * @Description: 未进入游戏绑定
  * @Date: 2020-12-01 19:11:52
- * @LastEditTime: 2020-12-07 11:18:37
+ * @LastEditTime: 2020-12-07 19:11:39
  * @FilePath: /giftBag/src/views/BindNotConfirm.vue
 -->
 
@@ -14,9 +14,8 @@
             <div class="tips-center">等待游戏验证</div>
             <div class="tips-desc">角色所在服：“{{roleId}}”，角色名：“{{gameName}}”，请进入游戏确认</div>
             <div>
-                <!-- <a @click="enter" href="javascript:" class="weui-btn weui-btn_primary">进入游戏</a> -->
-                <van-button class="btn" block type="success">进入游戏</van-button>
-                <van-button type="danger" class="btn" block @click="unbind" :disabled="loading">重新绑定</van-button>
+                <van-button class="btn" block type="success" @click="enter">进入游戏</van-button>
+                <van-button type="warning" class="btn" block @click="unbind" :disabled="loading">重新绑定</van-button>
             </div>
         </div>
         <Winxin ref="weixinRef"> </Winxin>
@@ -94,9 +93,6 @@ export default {
 }
 
 .btn {
-  width: 185px;
-  margin-left: 55px;
   margin-top: 20px;
-  
 }
 </style>

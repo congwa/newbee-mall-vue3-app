@@ -1,21 +1,23 @@
 <!--
  * @Description: 绑定成功
  * @Date: 2020-12-01 19:10:58
- * @LastEditTime: 2020-12-04 21:44:25
+ * @LastEditTime: 2020-12-07 20:41:49
  * @FilePath: /giftBag/src/views/BindSuccess.vue
 -->
 
 
 <template>
 <div>
-  <div style="text-align:center; padding:20px 40px;">>
+  <div style="text-align:center; padding:20px 40px;">
       <div>
           <i class="weui-icon-success weui-icon_msg"></i>
       </div>
-      <div class="tips-center">{{gameName}} 已经绑定成功</div>
+      <div class="tips-center">{{gameName}} <br />已经绑定成功</div>
       <div>
-        <van-button type="danger" class="btn" @click="unbind" :disabled="loading">重新绑定</van-button>
+        <van-button type="danger" size="large" class="btn" @click="unbind" :disabled="loading">解除绑定</van-button>
       </div>
+
+      <div style="color: red; margin-top:20px;">{{tips}}</div>
   </div>
 </div>
   
@@ -27,13 +29,16 @@ import { useStore } from 'vuex';
 import { bind } from '@/service/user';
 import { useRouter} from 'vue-router';
 import { BindStatus } from '@/common/js/status.js';
+import { Dialog } from 'vant';
+import { Toast } from 'vant';
 export default {
   name: 'bindSuccess',
   setup() {
     const state = reactive({
       roleId: '', // 游戏角色id
       gameName: '',
-      loading: false
+      loading: false,
+      tips: null
     })
     const store = useStore();
     const mapState = store.state;
@@ -41,19 +46,48 @@ export default {
     onMounted(async () => {
         state.roleId = mapState.roleId; 
         state.gameName = mapState.gameName;
+        confirm();
     })
+
+    const confirm = async () => {
+      state.loading = true;
+      const t = Toast.loading({
+          message: '加载中...',
+          forbidClick: true,
+          duration: 0
+      });
+      const data = await bind({
+        type: 'getExpire',
+         openid: mapState.openId
+      }).catch((data) => {
+        t.close();
+        state.tips = data.msg;
+      })
+      t.close();
+      if (data) {
+        state.loading = false;
+      }
+    }
 
     const unbind = async () => {
         state.loading = true;
         const data = await bind({
           type: 'unbind',
           openid: mapState.openId
+        }).catch((data) => {
+          Dialog.confirm({
+            title: '',
+            message: `${data.msg}`,
+          });
         });
         state.loading = false;
         if (data) {
           store.commit('bindStatus',BindStatus.No);
           router.push('/bind');
-        }
+          Toast.loading({
+            message: '解绑成功',
+          })
+        } 
     }
 
     return {
@@ -75,10 +109,5 @@ export default {
     margin: 5px;
 }
 
-.btn {
-  width: 185px;
-  margin-left: 55px;
-  margin-top: 20px;
-  
-}
+
 </style>

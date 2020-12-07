@@ -1,7 +1,7 @@
 <!--
  * @Description: 绑定账号页
  * @Date: 2020-12-01 16:13:24
- * @LastEditTime: 2020-12-04 21:54:50
+ * @LastEditTime: 2020-12-07 20:43:40
  * @FilePath: /giftBag/src/views/Bind.vue
 -->
 
@@ -16,6 +16,7 @@
             placeholder="请输入游戏角色ID"
             :rules="[{ required: true, message: '' }]"
         />
+        <div style="text-align:center; padding:20px;">游戏内点击个人战力进入指挥官信息界面，左上角游戏ID处长按即可复制获得</div>
         <div style="margin: 16px;">
             <van-button class="btn" round block type="primary" native-type="search" :disabled="loading">查询</van-button>
         </div>
