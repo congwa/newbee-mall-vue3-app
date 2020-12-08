@@ -1,7 +1,7 @@
 <!--
  * @Description: 未进入游戏绑定
  * @Date: 2020-12-01 19:11:52
- * @LastEditTime: 2020-12-07 19:11:39
+ * @LastEditTime: 2020-12-08 11:40:26
  * @FilePath: /giftBag/src/views/BindNotConfirm.vue
 -->
 
@@ -15,7 +15,7 @@
             <div class="tips-desc">角色所在服：“{{roleId}}”，角色名：“{{gameName}}”，请进入游戏确认</div>
             <div>
                 <van-button class="btn" block type="success" @click="enter">进入游戏</van-button>
-                <van-button type="warning" class="btn" block @click="unbind" :disabled="loading">重新绑定</van-button>
+                <van-button type="warning" class="btn" block @click="confirmUnbind" :disabled="loading">重新绑定</van-button>
             </div>
         </div>
         <Winxin ref="weixinRef"> </Winxin>
@@ -29,6 +29,7 @@ import { useRouter } from 'vue-router';
 import {bind} from '@/service/user.js';
 import Winxin from '@/components/Weixin.vue';
 import { BindStatus } from '@/common/js/status.js';
+import { Dialog } from 'vant';
 
 export default {
   name: 'bindNotConfirm',
@@ -54,6 +55,29 @@ export default {
         weixinRef.value.showWinClick();
     }
 
+     const confirmUnbind = async () => {
+      Dialog.confirm({
+        title: '',
+        message: `您确定进行重新解绑?`,
+        beforeClose,
+      });
+    }
+
+    const beforeClose = async (action, done) => {
+      console.log(done);
+      // eslint-disable-next-line no-undef
+        try {
+          if (action === 'confirm') {
+             await unbind();
+             return true;
+          } else {
+            return true;
+          }
+        } catch (error) {
+            return true;
+        }
+    };
+
     const unbind = async () => {
         state.loading = true;
         const data = await bind({
@@ -71,7 +95,8 @@ export default {
       ...toRefs(state),
       enter,
       unbind,
-      weixinRef
+      weixinRef,
+      confirmUnbind
     }
   },
 }

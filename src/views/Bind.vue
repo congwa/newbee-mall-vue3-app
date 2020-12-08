@@ -1,7 +1,7 @@
 <!--
  * @Description: 绑定账号页
  * @Date: 2020-12-01 16:13:24
- * @LastEditTime: 2020-12-07 20:43:40
+ * @LastEditTime: 2020-12-08 11:44:40
  * @FilePath: /giftBag/src/views/Bind.vue
 -->
 
@@ -58,7 +58,8 @@ export default {
          state.loading = false;
         Dialog.confirm({
           title: '确认信息',
-          message: `游戏区:${data.sid}\n游戏名:${data.gamename}`,
+          messageAlign: 'left',
+          message: `游戏区: ${data.sid}\n游戏名: ${data.gamename}`,
           beforeClose,
         });
       } catch (error) {
@@ -131,5 +132,8 @@ export default {
       margin-bottom: 20px;
       text-align: center;
       font-size: 20px;
+  }
+  /deep/ .van-dialog__message {
+    text-align: left !important;
   }
 </style>

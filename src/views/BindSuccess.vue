@@ -1,7 +1,7 @@
 <!--
  * @Description: 绑定成功
  * @Date: 2020-12-01 19:10:58
- * @LastEditTime: 2020-12-07 20:41:49
+ * @LastEditTime: 2020-12-08 11:56:22
  * @FilePath: /giftBag/src/views/BindSuccess.vue
 -->
 
@@ -14,7 +14,7 @@
       </div>
       <div class="tips-center">{{gameName}} <br />已经绑定成功</div>
       <div>
-        <van-button type="danger" size="large" class="btn" @click="unbind" :disabled="loading">解除绑定</van-button>
+        <van-button type="danger" size="large" class="btn" @click="confirmUnbind" :disabled="loading">解除绑定</van-button>
       </div>
 
       <div style="color: red; margin-top:20px;">{{tips}}</div>
@@ -69,6 +69,27 @@ export default {
       }
     }
 
+    const confirmUnbind = async () => {
+      Dialog.confirm({
+        title: '',
+        message: `您确定解除该游戏号与本微信的绑定关系? \n (解绑成功后，会进入24小时冷冻期，冷冻期间不可进行解绑操作)`,
+        beforeClose,
+      });
+    }
+
+    const beforeClose = async (action) => {
+        try {
+          if (action === 'confirm') {
+             await unbind();
+             return true;
+          } else {
+            return true;
+          }
+        } catch (error) {
+            return true;
+        }
+    };
+
     const unbind = async () => {
         state.loading = true;
         const data = await bind({
@@ -92,7 +113,8 @@ export default {
 
     return {
       ...toRefs(state),
-      unbind
+      unbind,
+      confirmUnbind
     }
   },
 }
