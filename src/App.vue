@@ -1,18 +1,19 @@
 <template>
-<div id="app" style="display: flex;flex-direction: column-reverse;">
+<!-- <div id="app" style="display: flex;flex-direction: column-reverse;"> -->
+  <div id="app">
   <router-view class="router-view" v-slot="{ Component }">
     <transition :name="transitionName">
       <component :is="Component" />
     </transition>
 
-    <div class="weui-msg__extra-area">
+    <!-- <div class="weui-msg__extra-area">
       <div class="weui-footer">
         <p class="weui-footer__links">
             <a href="javascript:void(0);" class="weui-footer__link">北京龙创悦动网络科技有限公司</a>
         </p>
         <p class="weui-footer__text">Copyright © 2015-2020</p>
       </div>
-    </div>
+    </div> -->
   </router-view>
 </div>
 </template>

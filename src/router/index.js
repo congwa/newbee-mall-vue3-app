@@ -9,6 +9,7 @@ const BindNotConfirm = () => import('../views/BindNotConfirm.vue');
 const ErrorComponent = () => import('../views/Error.vue');
 const BindSuccess = () => import('../views/BindSuccess.vue');
 const WaitGameCheck = () => import('../views/WaitGameCheck.vue');
+const Sign = () => import('../views/Sign.vue');
 
 const router = createRouter({
   history: createWebHashHistory(), // hash模式：createWebHashHistory，history模式：createWebHistory
@@ -64,7 +65,17 @@ const router = createRouter({
         index: 100,
         title: '发生错误'
       }
-    }
+    },
+    {
+      path: '/sign',
+      name: 'sign',
+      component: Sign,
+      meta: {
+        index: 1,
+        title: '签到',
+        hasBindWhileList: true
+      }
+    },
   ]
 })
 
@@ -129,11 +140,16 @@ const HandleBindStatus = {
   }, 
   [BindStatus.Yes]: {
       async handle(to, from, next) {
-        if(to.path === '/bindSuccess') {
-          nextFunc(to,next);
+        if(to.meta.hasBindWhileList) {
+          nextFunc(to, next);
         } else {
-          nextFunc(to, next, './bindSuccess');
+          if(to.path === '/bindSuccess') {
+            nextFunc(to,next);
+          } else {
+            nextFunc(to, next, './bindSuccess');
+          }
         }
+       
       }
   },
   [BindStatus.NoConfirm]: {
@@ -144,7 +160,8 @@ const HandleBindStatus = {
         nextFunc(to, next, '/bindNotConfirm');
       }
     }
-  }
+  },
+ 
 }
 
 

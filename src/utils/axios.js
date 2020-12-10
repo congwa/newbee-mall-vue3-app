@@ -11,7 +11,7 @@ axios.defaults.baseURL = process.env.NODE_ENV == 'development' ? '/' : 'http://l
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 axios.interceptors.request.use((config) => {
-  if(config.method ==' post'){
+  if(config.method =='post'){
     config.data = {
         ...config.data,
         sign: store.state.sign

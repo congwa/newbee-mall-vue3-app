@@ -29,3 +29,9 @@ export const bind = (params) => {
   });
 }
 
+export const sign = (params) => {
+  return axios.get('/gzh_test/signin/signin.php', {
+    params
+  })
+}
+
