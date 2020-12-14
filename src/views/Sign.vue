@@ -1,7 +1,7 @@
 <!--
  * @Description:签到
  * @Date: 2020-12-09 14:36:41
- * @LastEditTime: 2020-12-10 22:00:40
+ * @LastEditTime: 2020-12-14 18:53:16
  * @FilePath: /giftBag/src/views/Sign.vue
 -->
 <template>
@@ -37,10 +37,13 @@
 					</div>
 
 					<div class="btn-sign-content" :class="is_signin? 'btn-sign-content-finish': ''">
-						<div class="btn-sign" @click="onSignIn">
+						<div v-if="!is_signin" class="btn-sign" @click="onSignIn">
 							<p>我要</p>
 							<p>签到</p>
 						</div>
+						<div v-else  class="btn-sign">
+							<p>已签到</p>
+						</div>	
 					</div>
 				</div>
 				
@@ -48,7 +51,7 @@
 				<div class="box">
 						<div class="box-one" :class="`box-sign${index}`" v-for="(day, index) in Days" :key="day.count">
 							<div class="top">
-								<img :src="count>= day.count? `${publicPath}/${day.url.sign}` : `${publicPath}/${day.url.noSign}`">
+								<img :src="count>= day.count? `${publicPath}${day.url.sign}` : `${publicPath}${day.url.noSign}`">
 							</div>
 							<div class="integral">
 								{{day.giftText}}
@@ -91,16 +94,39 @@
 							</div>
 						</div>
 					</van-overlay>
+
+					<van-overlay :show="signDialog" @click="onSignSuccesss">
+						<div class="wrapper" @click.stop>
+							<div class="block ruleDialog-content sign-success">
+								<div class="dialog-close" @click="onSignSuccesss"></div>
+								<div class="rule-content">
+									<div>截止本次签到，您累计签到{{count}}天</div>
+									<div v-if="checkGetSign.gift == 'gift'">
+										<div>本次签到您获得了“{{checkGetSign.text}}“的奖励，请在游戏内查收~</div>
+										<div v-if="count <= 26">距离获得“{{checkGetSign.willText}}”还需继续签到{{checkGetSign.willCount}}天，加油哦！</div>
+										<div v-else>您已获得本月的全部奖励，下个自然月1日凌晨5：00将重置奖励，记得要来领哦！</div>
+									</div>
+									<div v-else-if="checkGetSign.gift == 'willGift'">感谢您的坚持不懈，距离获得“{{checkGetSign.willText}}”还差{{checkGetSign.willCount}}天，加油！</div>						    
+									<div v-else>
+										<div>截止本次签到，您累计签到{{count}}天</div>
+										<div>您已获得本月的全部奖励，下个自然月1日凌晨5：00将重置奖励，记得要来领哦！</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</van-overlay>
 			
 	</div>
 </template>
 
 
 <script>
-import { reactive, onMounted, toRefs } from 'vue';
+import { reactive, onMounted, toRefs, computed } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import { Toast, Dialog } from 'vant';
 import { sign } from '@/service/user';
+import { BindStatus } from '@/common/js/status';
 
 const publicPath =  process.env.BASE_URL;
 const Days = [
@@ -180,16 +206,18 @@ export default {
 			headimgurl: '',   // 头像url
 			ruleDialog: false, // 格则弹窗
 			historyDialog: false, // 获奖记录弹窗
+			signDialog: false, // 签到成功
 			gameName: '',
 			Days,
 			publicPath,
 			historyData: [],
-			nickname: '',
+			nickname: '守望黎明',
 			showPopover: false
 		})
 		const store = useStore();
-    onMounted(async () => {
-			console.log('onMounted');
+		const router = useRouter();
+		onMounted(async () => {
+			console.log('-------------onMounted', publicPath);
 			const t = Toast.loading({
 				duration: 0,
 				forbidClick: true,
@@ -219,6 +247,47 @@ export default {
 			}
 		
 		})
+
+		const checkGetSign = computed(() => {
+			const findResult = Days.findIndex((day) => {
+				if(day.count === Number(state.count)) {
+					return true;
+				}
+			})
+			// 刚好今天发奖
+			if( findResult !== -1){
+				const day = Days[findResult];
+				return {
+					gift: 'gift',
+					text: day.giftText,
+					willCount: Number(state.count) >=26 ?26 :Days[findResult+1].count - Number(state.count),
+					willText: Number(state.count) >= 26 ?  '' : Days[findResult+1].giftText
+				}
+			} else {
+				// 第一个不满足条件的礼物下标
+				const firstNotGiftIndex = Days.findIndex((day) => {
+					if(day.count > Number(state.count)) {
+						return true;
+					}
+				})
+				if (firstNotGiftIndex !== -1) {
+					console.log('Days', firstNotGiftIndex, Days);
+					const dayResult = Days[firstNotGiftIndex];
+					console.log('dayResult',dayResult);
+					return {
+						gift: 'willGift',
+						willCount: dayResult.count - Number(state.count),
+						text: '',
+						willText: dayResult.giftText
+					}
+				// 签到27天
+				} else {
+					return {
+						gift: 'finish'
+					}
+				}
+			}
+		});
 
 
 		const getHistory = async () => {
@@ -251,6 +320,11 @@ export default {
 
 
 		const onSignIn = async () => {
+			const bindStatus = store.state.bindStatus;
+			if (bindStatus !== BindStatus.Yes) {
+				router.push('./bind');
+				return false;
+			}
 			if(state.is_signin) {
 				// 已经签到过不可再签到了
 				return;
@@ -279,6 +353,7 @@ export default {
 				if (signResult) {
 					state.count = signResult.count;
 					state.is_signin = true;
+					state.signDialog = true;
 				}
 			} catch (error) {
 					t.close();
@@ -296,15 +371,20 @@ export default {
 						getHistory();
 				}
 			}
-			return {onRule, onHistory};
+			const onSignSuccesss = () => {
+				state.signDialog = !state.signDialog;
+			}
+			return {onRule, onHistory, onSignSuccesss};
 		}
 
-		const {onRule, onHistory} = useDialog();
+		const {onRule, onHistory, onSignSuccesss} = useDialog();
 		return {
 			...toRefs(state),
+			checkGetSign,
 			onSignIn,
 			onRule,
-			onHistory
+			onHistory,
+			onSignSuccesss
 		}
   },
 }
@@ -340,9 +420,13 @@ export default {
 			padding: 0 25px;
 			font-size: 10px;
 			& >div {
-				font-size: 10px;
+				font-size: 12px;
 			}
 		}
+		
+	}
+	.sign-success {
+		background-image: url('~@/assets/sign-success.png') !important;
 	}
 
 	.historyDialog-content {
@@ -489,7 +573,7 @@ export default {
 		.wx-title-default {
 			width: 52px;
 			.wh(52px, 52px);
-			background-image: url('~@/assets/icon.png');
+			background-image: url('~@/assets/ls-icon.png');
 			background-size: 100% 100%;
 		}
 		.btns {

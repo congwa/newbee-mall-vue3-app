@@ -1,7 +1,7 @@
 /*
  * @Description: 
  * @Date: 2020-12-02 11:20:23
- * @LastEditTime: 2020-12-09 19:00:53
+ * @LastEditTime: 2020-12-11 12:08:46
  * @FilePath: /giftBag/vue.config.js
  */
 const webpack = require("webpack");
@@ -16,7 +16,9 @@ module.exports = {
             }
         }
     },
-    publicPath: process.env.NODE_ENV === 'production'? 'http://img-10048861.file.myqcloud.com/wechat/': './',
+    // publicPath: process.env.NODE_ENV === 'production'? 'http://img-10048861.file.myqcloud.com/wechat/': './',
+    publicPath: './',
+    // baseUrl: './',
     chainWebpack(config) {
           if (process.env.NODE_ENV === 'production') {
             config.plugin('webpack-bundle-analyzer').use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin);

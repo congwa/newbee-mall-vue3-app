@@ -126,7 +126,12 @@ const HandleBindStatus = {
         data.sid && store.commit('roleId', data.sid);
         data.gamename && store.commit('gameName', data.gamename);
         // 重新进行定向
-        HandleBindStatus[store.state.bindStatus].handle.call(this, to, from, next);
+        if(to.meta.hasBindWhileList) { 
+          nextFunc(to, next);
+        }
+        else {
+          HandleBindStatus[store.state.bindStatus].handle.call(this, to, from, next);
+        }
     }
   },
   [BindStatus.No]: {
