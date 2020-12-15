@@ -46,7 +46,13 @@ html, body {
   height: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
+  min-width: 320PX; 
+  max-width: 540PX;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
 }
+
 #app {
   height: 100%;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -54,6 +60,8 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   // text-align: center;
   color: #2c3e50;
+  position: relative;
+
 }
 
 .router-view{
@@ -100,4 +108,5 @@ html, body {
 .btn {
   margin-top: 20px !important;
 }
+
 </style>

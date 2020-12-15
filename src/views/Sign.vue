@@ -1,7 +1,7 @@
 <!--
  * @Description:签到
  * @Date: 2020-12-09 14:36:41
- * @LastEditTime: 2020-12-14 20:12:09
+ * @LastEditTime: 2020-12-15 12:09:30
  * @FilePath: /giftBag/src/views/Sign.vue
 -->
 <template>
@@ -97,7 +97,7 @@
 
 					<van-overlay :show="signDialog" @click="onSignSuccesss">
 						<div class="wrapper" @click.stop>
-							<div class="block ruleDialog-content sign-success">
+							<div class="block signDialog-content sign-success">
 								<div class="dialog-close" @click="onSignSuccesss"></div>
 								<div class="rule-content">
 									<div>截止本次签到，您累计签到{{count}}天</div>
@@ -207,7 +207,7 @@ export default {
 			ruleDialog: false, // 格则弹窗
 			historyDialog: false, // 获奖记录弹窗
 			signDialog: false, // 签到成功
-			gameName: '',
+			gameName: '守望黎明',
 			Days,
 			publicPath,
 			historyData: [],
@@ -409,7 +409,7 @@ export default {
 	
 	.ruleDialog-content {
 		@wid: 761px;
-		@hei: 467px;
+		@hei: 750px;
 		width: @wid/2;
 		height: @hei/2;
 		position: relative;
@@ -418,15 +418,34 @@ export default {
 		.rule-content {
 			margin-top: 80px;
 			padding: 0 25px;
-			font-size: 10px;
+			font-size: 16px;
 			& >div {
-				font-size: 12px;
+				font-size: 16px;
+				letter-spacing: -1;
 			}
 		}
 		
 	}
 	.sign-success {
 		background-image: url('~@/assets/sign-success.png') !important;
+	}
+
+	.signDialog-content {
+		@wid: 761px;
+		@hei: 467px;
+		width: @wid/2;
+		height: @hei/2;
+		position: relative;
+		background-image: url('~@/assets/sign-success.png');
+		background-size: 100% 100%;
+		.rule-content {
+			margin-top: 80px;
+			padding: 0 25px;
+			font-size: 16px;
+			& >div {
+				font-size: 16px;
+			}
+		}
 	}
 
 	.historyDialog-content {
