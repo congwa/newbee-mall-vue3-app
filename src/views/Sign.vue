@@ -1,7 +1,7 @@
 <!--
  * @Description:签到
  * @Date: 2020-12-09 14:36:41
- * @LastEditTime: 2020-12-14 18:53:16
+ * @LastEditTime: 2020-12-14 20:12:09
  * @FilePath: /giftBag/src/views/Sign.vue
 -->
 <template>
@@ -26,9 +26,9 @@
 					</div> -->
 					<div class="btns">
 						<van-popover theme="dark" v-model:show="showPopover" placement="top">
-							<div>{{nickname}}</div>
+							<div>{{gameName}}</div>
 							<template #reference>
-									<div class="btn-wx-name">{{nickname}}</div>
+									<div class="btn-wx-name">{{gameName}}</div>
 							</template>
 						</van-popover>
 						<div class="btn-rule" @click="onRule">活动规则</div>
