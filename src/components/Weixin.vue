@@ -1,7 +1,7 @@
 <!--
  * @Description: 
  * @Date: 2020-12-02 14:44:29
- * @LastEditTime: 2020-12-17 11:38:27
+ * @LastEditTime: 2020-12-17 12:29:25
  * @FilePath: /giftBag/src/components/Weixin.vue
 -->
 
@@ -39,14 +39,14 @@ export default {
             } else {
                 if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {  //判断iPhone|iPad|iPod|iOS
                     // let tourl='warz://';
-                    let tourl ='http://warz.im30.net/v8/';
+                    let tourl ='https://ls.im30.net';
                     location.href = tourl;
                 } else if (/(Android)/i.test(navigator.userAgent)) {   //判断Android
                     // let tourl='lastwars://';
-                    let tourl ='http://warz.im30.net/v8/';
+                    let tourl ='https://ls.im30.net';
                     location.href = tourl;
                 } else {  //pc
-                    let tourl ='http://warz.im30.net/v8/';
+                    let tourl ='https://ls.im30.net';
                     location.href = tourl;
                 }
             }

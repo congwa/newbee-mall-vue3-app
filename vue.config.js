@@ -1,7 +1,7 @@
 /*
  * @Description: 
  * @Date: 2020-12-02 11:20:23
- * @LastEditTime: 2020-12-11 12:08:46
+ * @LastEditTime: 2020-12-17 14:35:24
  * @FilePath: /giftBag/vue.config.js
  */
 const webpack = require("webpack");
@@ -16,8 +16,8 @@ module.exports = {
             }
         }
     },
-    // publicPath: process.env.NODE_ENV === 'production'? 'http://img-10048861.file.myqcloud.com/wechat/': './',
-    publicPath: './',
+    publicPath: process.env.NODE_ENV === 'production'? 'http://img-10048861.file.myqcloud.com/wechat/': './',
+    // publicPath: './',
     // baseUrl: './',
     chainWebpack(config) {
           if (process.env.NODE_ENV === 'production') {

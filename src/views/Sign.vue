@@ -1,7 +1,7 @@
 <!--
  * @Description:签到
  * @Date: 2020-12-09 14:36:41
- * @LastEditTime: 2020-12-17 11:33:55
+ * @LastEditTime: 2020-12-17 12:20:17
  * @FilePath: /giftBag/src/views/Sign.vue
 -->
 <template>
@@ -36,7 +36,7 @@
 						<div class="btn-history" @click="onHistory">获奖记录</div>
 					</div>
 
-					<div class="btn-sign-content" :class="(is_signin || loading)? 'btn-sign-content-finish': ''">
+					<div class="btn-sign-content" :class="(is_signin || !loading)? 'btn-sign-content-finish': ''">
 						<div v-if="!is_signin" class="btn-sign" @click="onSignIn">
 							<p>我要</p>
 							<p>签到</p>

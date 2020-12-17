@@ -23,9 +23,9 @@ import axios from '../utils/axios'
 
 let bindUrl= '/gzh';
 
-if(process.env.test_node_dev) {
-  bindUrl= '/gzh_test';
-}
+// if(process.env.test_node_dev) {
+//   bindUrl= '/gzh_test';
+// }
 
 
 //http://ls.im30.net/gzh_test/bd/bind.php
