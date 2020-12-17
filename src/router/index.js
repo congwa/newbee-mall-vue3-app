@@ -1,4 +1,4 @@
-import { Toast } from 'vant'
+import { Toast, Dialog } from 'vant'
 import { createRouter, createWebHashHistory} from 'vue-router';
 import store from '@/store';
 import { BindStatus} from '../common/js/status';
@@ -73,7 +73,8 @@ const router = createRouter({
       meta: {
         index: 1,
         title: '签到',
-        hasBindWhileList: true
+        hasBindWhileList: true,
+        wx: true // 只能在微信中打开
       }
     },
   ]
@@ -215,6 +216,23 @@ router.beforeEach((to, from, next) => {
     console.log('路由to：',to);
     console.log('路由from', from);
     console.log('store', store);
+
+    if (to.meta.wx) {
+      // eslint-disable-next-line no-inner-declarations
+      function is_weixin() {
+        let ua = navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+      }
+      let wx = is_weixin();
+      if (!wx) {
+        Dialog({ message: '请前往《守望黎明》微信公众号点击 右下方“废土补给”——“每日签到”进入' })
+        return;
+      }
+    }
 
     // 拼合openid
     if(!to.query.openid) {

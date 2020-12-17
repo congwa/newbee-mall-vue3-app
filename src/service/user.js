@@ -21,16 +21,22 @@ import axios from '../utils/axios'
 //   return axios.post('/user/register', params);
 // }
 
+let bindUrl= '/gzh';
+
+if(process.env.test_node_dev) {
+  bindUrl= '/gzh_test';
+}
+
 
 //http://ls.im30.net/gzh_test/bd/bind.php
 export const bind = (params) => {
-  return axios.get('/gzh_test/bd/bind.php', {
+  return axios.get(bindUrl +'/bd/bind.php', {
     params
   });
 }
 
 export const sign = (params) => {
-  return axios.get('/gzh_test/signin/signin.php', {
+  return axios.get(bindUrl +'/signin/signin.php', {
     params
   })
 }

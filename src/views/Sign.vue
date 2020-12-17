@@ -1,7 +1,7 @@
 <!--
  * @Description:签到
  * @Date: 2020-12-09 14:36:41
- * @LastEditTime: 2020-12-15 12:09:30
+ * @LastEditTime: 2020-12-17 11:33:55
  * @FilePath: /giftBag/src/views/Sign.vue
 -->
 <template>
@@ -36,7 +36,7 @@
 						<div class="btn-history" @click="onHistory">获奖记录</div>
 					</div>
 
-					<div class="btn-sign-content" :class="is_signin? 'btn-sign-content-finish': ''">
+					<div class="btn-sign-content" :class="(is_signin || loading)? 'btn-sign-content-finish': ''">
 						<div v-if="!is_signin" class="btn-sign" @click="onSignIn">
 							<p>我要</p>
 							<p>签到</p>
@@ -103,13 +103,13 @@
 									<div>截止本次签到，您累计签到{{count}}天</div>
 									<div v-if="checkGetSign.gift == 'gift'">
 										<div>本次签到您获得了“{{checkGetSign.text}}“的奖励，请在游戏内查收~</div>
-										<div v-if="count <= 26">距离获得“{{checkGetSign.willText}}”还需继续签到{{checkGetSign.willCount}}天，加油哦！</div>
-										<div v-else>您已获得本月的全部奖励，下个自然月1日凌晨5：00将重置奖励，记得要来领哦！</div>
+										<div v-if="count < 26">距离获得“{{checkGetSign.willText}}”还需继续签到{{checkGetSign.willCount}}天，加油哦！</div>
+										<div v-else>您已获得本月的全部奖励，下个自然月1日凌晨0：00将重置奖励，记得要来领哦！</div>
 									</div>
 									<div v-else-if="checkGetSign.gift == 'willGift'">感谢您的坚持不懈，距离获得“{{checkGetSign.willText}}”还差{{checkGetSign.willCount}}天，加油！</div>						    
 									<div v-else>
-										<div>截止本次签到，您累计签到{{count}}天</div>
-										<div>您已获得本月的全部奖励，下个自然月1日凌晨5：00将重置奖励，记得要来领哦！</div>
+										<!-- <div>截止本次签到，您累计签到{{count}}天</div> -->
+										<div>您已获得本月的全部奖励，下个自然月1日凌晨0：00将重置奖励，记得要来领哦！</div>
 									</div>
 								</div>
 							</div>
@@ -202,6 +202,7 @@ export default {
   setup() {
 		const state = reactive({
 			count: 0, // 累计签到次数
+			loading: false,  // 是否登陆成功
 			is_signin: false, // 今日是否签到
 			headimgurl: '',   // 头像url
 			ruleDialog: false, // 格则弹窗
@@ -233,6 +234,7 @@ export default {
 				})
 				t.close();
 				if(loginResult) {
+					state.loading = true;
 					store.commit('gameName', loginResult.name);
 					// store.commit('setOpenId', loginResult.openid);
 					store.commit('roleId', loginResult.sid);
@@ -329,6 +331,10 @@ export default {
 				// 已经签到过不可再签到了
 				return;
 			}
+			if (!state.loading) {
+				return;
+			}
+			state.loading = false;
 			const t = Toast.loading({
 				duration: 0,
 				forbidClick: true,
@@ -342,6 +348,7 @@ export default {
 						type: 'signin'
 					}
 				).catch((error) => {
+					state.loading = true;
 					t.close();
 					if (error && error.msg) {
 							Dialog({ message: error.msg });
@@ -349,13 +356,16 @@ export default {
 							Dialog({ message: '发生错误，请稍后再试' });
 					}
 				})
+				state.loading = true;
 				t.close();
 				if (signResult) {
 					state.count = signResult.count;
+					// state.count = '26';
 					state.is_signin = true;
 					state.signDialog = true;
 				}
 			} catch (error) {
+					state.loading = true;
 					t.close();
 			}
 		}

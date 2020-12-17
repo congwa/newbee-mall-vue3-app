@@ -1,8 +1,8 @@
 <!--
  * @Description: 
  * @Date: 2020-12-02 14:44:29
- * @LastEditTime: 2020-12-03 16:42:26
- * @FilePath: /giftBag/src/components/weixin.vue
+ * @LastEditTime: 2020-12-17 11:38:27
+ * @FilePath: /giftBag/src/components/Weixin.vue
 -->
 
 <template>
@@ -38,10 +38,12 @@ export default {
                 state.isWinxin = true;
             } else {
                 if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {  //判断iPhone|iPad|iPod|iOS
-                    let tourl='warz://';
+                    // let tourl='warz://';
+                    let tourl ='http://warz.im30.net/v8/';
                     location.href = tourl;
                 } else if (/(Android)/i.test(navigator.userAgent)) {   //判断Android
-                    let tourl='lastwars://';
+                    // let tourl='lastwars://';
+                    let tourl ='http://warz.im30.net/v8/';
                     location.href = tourl;
                 } else {  //pc
                     let tourl ='http://warz.im30.net/v8/';
