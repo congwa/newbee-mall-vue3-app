@@ -1,7 +1,7 @@
 <!--
  * @Description:签到
  * @Date: 2020-12-09 14:36:41
- * @LastEditTime: 2020-12-17 12:20:17
+ * @LastEditTime: 2020-12-17 21:23:08
  * @FilePath: /giftBag/src/views/Sign.vue
 -->
 <template>
@@ -37,7 +37,8 @@
 					</div>
 
 					<div class="btn-sign-content" :class="(is_signin || !loading)? 'btn-sign-content-finish': ''">
-						<div v-if="!is_signin" class="btn-sign" @click="onSignIn">
+						<div v-if="!is_signin && BindStatus.Yes !== bindStatus" @click="onSignIn">去绑定</div>
+						<div v-else-if="!is_signin" class="btn-sign" @click="onSignIn">
 							<p>我要</p>
 							<p>签到</p>
 						</div>
@@ -69,7 +70,7 @@
 									<div>1.每日签到可积攒天数,达到指定天数可点亮英雄,获得英雄的馈赠。</div>
 									<div>2.活动期间，每个微信账号需授权且绑定游戏账号后才可签到，每日仅可签到1次。</div>
 									<div>3.各档位奖励单游戏账号每月仅可获得一次（奖励将以邮件形式发放，可在获奖记录查看明细）。</div>
-									<div>4.本活动以累计签到形式进行，每月1日凌晨5:00对上月点亮的英雄、累计签到天数进行清零重计。</div>
+									<div>4.本活动以累计签到形式进行，每月1日凌晨0:00对上月点亮的英雄、累计签到天数进行清零重计。</div>
 								</div>
 							</div>
 						</div>
@@ -200,6 +201,8 @@ const Days = [
 export default {
   name: 'sign',
   setup() {
+		const store = useStore();
+		const router = useRouter();
 		const state = reactive({
 			count: 0, // 累计签到次数
 			loading: false,  // 是否登陆成功
@@ -213,10 +216,13 @@ export default {
 			publicPath,
 			historyData: [],
 			nickname: '守望黎明',
-			showPopover: false
+			showPopover: false,
+			BindStatus,
+			bindStatus: store.state.bindStatus,
 		})
-		const store = useStore();
-		const router = useRouter();
+		
+
+		
 		onMounted(async () => {
 			console.log('-------------onMounted', publicPath);
 			const t = Toast.loading({
@@ -230,6 +236,10 @@ export default {
 					sign: store.state.sign,
 					type: 'login'
 				}).catch((error) => {
+					if(error && (error.code === -3 || error.code === '-3')) {
+						state.loading = true;
+
+					}
 					if(error && error.msg) Dialog({ message: error.msg });
 				})
 				t.close();

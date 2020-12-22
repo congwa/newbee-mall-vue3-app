@@ -21,7 +21,7 @@ import axios from '../utils/axios'
 //   return axios.post('/user/register', params);
 // }
 
-let bindUrl= '/gzh';
+let bindUrl= '/gzh_test';
 
 // if(process.env.test_node_dev) {
 //   bindUrl= '/gzh_test';

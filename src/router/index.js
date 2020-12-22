@@ -237,7 +237,7 @@ router.beforeEach((to, from, next) => {
     } else {
       let wx = is_weixin();
       if (!wx) {
-        let tourl ='https://ls.im30.net';
+        let tourl ='http://ls.im30.net/';
         location.href = tourl;
         return;
       }
